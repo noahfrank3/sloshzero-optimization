@@ -4,7 +4,7 @@ WORKDIR /truck_sloshing_server
 
 COPY . .
 
-RUN pip install --no-cache-dir fastapi python-dotenv ax-platform uvicorn && \
+RUN pip install --no-cache-dir fastapi python-dotenv ax-platform uvicorn sqlalchemy && \
     pip uninstall -y torch && \
     pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
 
