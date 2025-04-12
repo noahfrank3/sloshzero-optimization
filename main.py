@@ -1,21 +1,30 @@
-from fastapi import FastAPI
-from dotenv import load_dotenv
+import asyncio
+import logging
 import os
 from threading import Thread
-import logging
+import time
+
+from ax.exceptions.generation_strategy import MaxParallelismReachedException
 from ax.service.ax_client import AxClient, ObjectiveProperties
 from ax.storage.sqa_store.structs import DBSettings
+from dask.distributed import Client
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException
 
-app = FastAPI()
+# Setup logging and clients
 logging.basicConfig(level=logging.INFO)
+app = FastAPI()
 
-# Gets database settings for Ax client
+scheduler_address = os.getenv('SCHEDULER_ADDRESS')
+dask_client = Client(scheduler_address)
+
+# Get database settings for Ax client
 def get_db_settings():
     load_dotenv()
     DB_URL = os.getenv('DB_URL')
     return DBSettings(url=DB_URL)
 
-# Sets up the Ax client
+# Set up the Ax client
 def create_ax_client():
     return AxClient().create_experiment(
         name='truck_sloshing',
@@ -55,11 +64,17 @@ def evaluate_params(params):
     return {'F_slosh': F_slosh, 'V_baffle': (V_baffle, 0.0)}
 
 # Performs optimization loop
-def optimization():
+def schedule_jobs():
     ax_client = create_ax_client()
-    for i in range(20):
+    
+    n_trials = 0
+    while True:
         # Generate trial
-        params, trial_index = ax_client.get_next_trial()
+        try:
+            params, trial_index = ax_client.get_next_trial()
+        except MaxParallelismReachedException:
+            time.sleep(1)
+            continue
         logging.info(f"Trial {trial_index} generated with x = "
                      f"{params.get('x')} and y = {params.get('y')}")
         
@@ -75,5 +90,15 @@ def optimization():
 # Creates thread for running optimization
 @app.post('/run-optimization')
 def run_optimization():
-    thread = Thread(target=optimization)
+    thread = Thread(target=schedule_jobs)
     thread.start()
+
+@app.post('/run-job')
+async def run_job(params):
+    try:
+        # Submit the job to the cluster
+        future = dask_client.submit(F_slosh, params)
+        F_slosh_val = await asyncio.wrap_future(future)
+        return F_slosh_val
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
