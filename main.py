@@ -8,7 +8,6 @@ from ax.exceptions.generation_strategy import MaxParallelismReachedException
 from ax.service.ax_client import AxClient, ObjectiveProperties
 from ax.storage.sqa_store.structs import DBSettings
 from dask.distributed import Client
-from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 
 # Setup logging and clients
@@ -20,8 +19,7 @@ dask_client = Client(scheduler_address)
 
 # Get database settings for Ax client
 def get_db_settings():
-    load_dotenv()
-    DB_URL = os.getenv('DB_URL')
+    DB_URL = os.getenv('DATABASE_URL')
     return DBSettings(url=DB_URL)
 
 # Set up the Ax client
