@@ -1,0 +1,10 @@
+build:
+  docker:
+    web: Dockerfile.server
+    scheduler: Dockerfile.scheduler
+    worker: Dockerfile.worker
+
+run:
+  web: uvicorn main:app --host=0.0.0.0 --port=${FASTAPI_PORT}
+  scheduler: dask scheduler
+  worker: dask worker ${SCHEDULER_ADDRESS}
