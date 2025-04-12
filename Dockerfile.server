@@ -1,6 +1,6 @@
 FROM python:slim
 WORKDIR /sloshzero-server
-COPY requirements.server.txt
+COPY requirements.server.txt .
 RUN pip install --no-cache-dir -r requirements.server.txt
 COPY . .
 EXPOSE 5000

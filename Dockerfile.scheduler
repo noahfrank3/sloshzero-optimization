@@ -1,5 +1,5 @@
 FROM python:slim
 WORKDIR /sloshzero-server
-COPY requirements.scheduler.txt
+COPY requirements.scheduler.txt .
 RUN pip install --no-cache-dir -r requirements.scheduler.txt
 CMD ["dask", "scheduler"]
