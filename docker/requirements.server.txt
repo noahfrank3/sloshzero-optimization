@@ -2,4 +2,4 @@ fastapi
 uvicorn
 ax-platform
 dask[distributed]
-matplotlib
+sqlalchemy
