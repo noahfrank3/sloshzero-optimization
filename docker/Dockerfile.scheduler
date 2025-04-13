@@ -1,5 +1,5 @@
 FROM python:slim
 WORKDIR /app
-COPY ../requiremnts/requirements.scheduler.txt /app/
+COPY requirements.scheduler.txt /app/
 RUN pip install --no-cache-dir -r requirements.scheduler.txt
 CMD ["dask", "scheduler"]

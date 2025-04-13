@@ -1,6 +1,6 @@
 FROM python:slim
 WORKDIR /app
-COPY ../requirements/requirements.server.txt /app/
+COPY requirements.server.txt /app/
 RUN pip install --no-cache-dir -r requirements.server.txt
 COPY src/ /app/src/
 EXPOSE 5000
