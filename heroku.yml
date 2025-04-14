@@ -5,6 +5,7 @@ build:
     worker: ./docker/Dockerfile.worker
 
 release:
+  image: server
   command:
     - dask-scheduler
 
