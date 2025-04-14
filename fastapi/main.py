@@ -7,14 +7,14 @@ from fastapi import FastAPI, Depends, HTTPException
 from optimize import create_ax_client, generate_trials
 
 GITHUB_REPO = 'https://github.com/noahfrank3/sloshzero-optimization'
-LOG_PATH = os.path.join(os.path.dirname(__file__), '../logs/server.log')
+# LOG_PATH = os.path.join(os.path.dirname(__file__), '../logs/server.log')
 
 # Create FastAPI app
 app = FastAPI()
 API_KEY = os.getenv('API_KEY')
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, filename=LOG_PATH)
+logging.basicConfig(level=logging.INFO) #, filename=LOG_PATH)
 logging.info(f"This server is licensed under AGPL-3.0. "
              "Source code: {GITHUB_REPO}")
 
