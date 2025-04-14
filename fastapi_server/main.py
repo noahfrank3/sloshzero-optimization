@@ -19,7 +19,7 @@ logging.info(f"This server is licensed under AGPL-3.0. "
 
 # Create Dask client
 scheduler_address = os.getenv('SCHEDULER_ADDRESS')
-dask_client = Client(scheduler_address)
+dask_client = Client(scheduler_address + ':8786')
 
 # Create Ax client
 ax_client = create_ax_client()

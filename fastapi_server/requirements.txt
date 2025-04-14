@@ -1,5 +1,5 @@
 fastapi
 uvicorn
-ax-platform
+ax-platform[mysql]
 dask[distributed]
 sqlalchemy
