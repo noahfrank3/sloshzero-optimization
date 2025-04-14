@@ -1,5 +1,0 @@
-FROM python:slim
-WORKDIR /app
-COPY ./docker/requirements.scheduler.txt /app/
-RUN pip install --no-cache-dir -r requirements.scheduler.txt
-CMD ["dask", "scheduler"]

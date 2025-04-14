@@ -12,13 +12,28 @@ V_BAFFLE_MAX = 5 # maximum value for baffle volume
 MAX_TRIALS = 50 # maximum number of trials to evaluate
 WAIT_TIME = 5 # wait time before attempting to generate new trial, seconds
 
+RESET_DB = False # reset database and create a new experiment
+
 def get_db_settings():
     DB_URL = os.getenv('DATABASE_URL')
     return DBSettings(url=DB_URL)
 
+def create_ax_client_REAL():
+    if RESET_DB:
+        reset_db()
+
+    try:
+        ax_client = AxClient().load_experiment_from_database('sloshzero')
+        logging.info("Ax client created with loaded experiment from database")
+    except:
+        ax_client = create_new_ax_client()
+        logging.info("Ax client created with new experiment")
+
+    return ax_client
+
 def create_ax_client():
     ax_client = AxClient().create_experiment(
-        name='truck_sloshing',
+        name='sloshzero',
         parameters=[
                 {
                     'name': 'x',

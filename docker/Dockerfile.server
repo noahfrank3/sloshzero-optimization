@@ -1,7 +1,0 @@
-FROM python:slim
-WORKDIR /app
-COPY ./docker/requirements.server.txt /app/
-RUN pip install --no-cache-dir -r requirements.server.txt
-COPY . .
-EXPOSE 5000
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "${FASTAPI_PORT}"]
