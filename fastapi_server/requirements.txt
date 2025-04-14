@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-ax-platform
+ax-platform[postgres]
 dask[distributed]
 sqlalchemy
 psycopg2
