@@ -26,10 +26,14 @@ def create_ax_client():
         ax_client = create_new_ax_client()
         logging.info("Ax client created with new experiment")
 
+    if ax_client is None:
+        logging.info("AX CLIENT IS NONE")
+
     return ax_client
 
 def create_new_ax_client():
-    ax_client = AxClient().create_experiment(
+    ax_client = AxClient(db_settings=get_db_settings())
+    ax_client.create_experiment(
         name='sloshzero',
         parameters=[
                 {
@@ -52,8 +56,7 @@ def create_new_ax_client():
                     minimize=True,
                     threshold=V_BAFFLE_MAX
                 )
-        },
-        db_settings=get_db_settings()
+        }
     )
     
     logging.info("New Ax client created")
