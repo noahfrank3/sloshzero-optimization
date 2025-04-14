@@ -1,5 +1,5 @@
 fastapi
 uvicorn
 ax-platform
-dask[distributed]
+dask[dstributed]
 sqlalchemy
