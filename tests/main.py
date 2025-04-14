@@ -9,19 +9,21 @@ MAX_TRIALS = 20 # maximum number of trials to evaluate
 
 RESET_DB = False # reset database and create a new experiment
 
+logging.basicConfig(level=logging.INFO)
+
 def create_ax_client():
     try:
         ax_client = AxClient.load_from_json_file('sloshzero.json')
         logging.info("Ax client created with loaded experiment from database")
-    except Exception as e:
-        logging.info(e)
+    except FileNotFoundError:
         ax_client = create_new_ax_client()
         logging.info("Ax client created with new experiment")
 
     return ax_client
 
 def create_new_ax_client():
-    ax_client = AxClient().create_experiment(
+    ax_client = AxClient()
+    ax_client.create_experiment(
         name='sloshzero',
         parameters=[
                 {
@@ -48,6 +50,8 @@ def create_new_ax_client():
     )
     
     logging.info("New Ax client created")
+    if ax_client is None:
+        raise KeyboardInterrupt
     return ax_client
 
 def run_trial(ax_client):
@@ -63,7 +67,7 @@ def run_trial(ax_client):
     V_baffle_val = V_baffle(params)
 
     # Complete trial
-    objectives = {'F_slosh': F_slosh_val, 'V_baffle': (V_baffle_val, 0.0)}
+    objectives = {'F_slosh': F_slosh_val, 'V_baffle': V_baffle_val}
     ax_client.complete_trial(trial_index=trial_index, raw_data=objectives)
     logging.info(f"Trial {trial_index} completed with F_slosh = "
                  f"{objectives['F_slosh']} and V_baffle = "

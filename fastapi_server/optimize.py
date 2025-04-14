@@ -89,7 +89,7 @@ async def run_trial(ax_client, dask_client, params, trial_index):
     V_baffle_val = V_baffle(params)
 
     # Complete trial
-    objectives = {'F_slosh': F_slosh_val, 'V_baffle': (V_baffle_val, 0.0)}
+    objectives = {'F_slosh': F_slosh_val, 'V_baffle': V_baffle_val}
     ax_client.complete_trial(trial_index=trial_index, raw_data=objectives)
     logging.info(f"Trial {trial_index} completed with F_slosh = "
                  f"{objectives['F_slosh']} and V_baffle = "
