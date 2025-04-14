@@ -9,6 +9,6 @@ release:
     - dask-scheduler
 
 run:
-  server: uvicorn src.main:app --host 0.0.0.0 --port $FASTAPI_PORT
+  web: uvicorn src.main:app --host 0.0.0.0 --port $FASTAPI_PORT
   scheduler: dask-scheduler
   worker: dask-worker --scheduler_address=$SCHEDULER_ADDRESS
