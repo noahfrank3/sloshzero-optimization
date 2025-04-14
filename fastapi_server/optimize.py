@@ -7,13 +7,8 @@ from ax.service.ax_client import AxClient, ObjectiveProperties
 from ax.storage.sqa_store.db import init_engine_and_session_factory, get_engine, create_all_tables
 from ax.storage.sqa_store.structs import DBSettings
 
-F_SLOSH_MAX = 5 # maximum value for sloshing force
-V_BAFFLE_MAX = 5 # maximum value for baffle volume
+import config
 
-MAX_TRIALS = 50 # maximum number of trials to evaluate
-WAIT_TIME = 5 # wait time before attempting to generate new trial, seconds
-
-RESET_DB = False # reset database and create a new experiment
 DB_URL = os.getenv('MYSQL_URL')
 
 def create_ax_client():
@@ -22,8 +17,6 @@ def create_ax_client():
 
     # Initialize database
     init_engine_and_session_factory(url=DB_URL)
-    engine = get_engine()
-    create_all_tables(engine)
 
     # Create/load experiment
     try:
@@ -39,6 +32,11 @@ def create_ax_client():
     return ax_client
 
 def create_experiment(ax_client):
+    # Initialize databse
+    engine = get_engine()
+    create_all_tables(engine)
+
+    # Create new experiment
     ax_client.create_experiment(
         name='sloshzero',
         parameters=[
@@ -56,11 +54,11 @@ def create_experiment(ax_client):
         objectives={
                 'F_slosh': ObjectiveProperties(
                     minimize=True,
-                    threshold=F_SLOSH_MAX
+                    threshold=config.F_SLOSH_MAX
                 ),
                 'V_baffle': ObjectiveProperties(
                     minimize=True,
-                    threshold=V_BAFFLE_MAX
+                    threshold=config.V_BAFFLE_MAX
                 )
         }
     )
@@ -68,13 +66,13 @@ def create_experiment(ax_client):
     logging.info("New Ax client created")
     return ax_client
 
-async def generate_trials(ax_client, dask_client):
+async def schedule_trials(ax_client, dask_client, max_trials):
     n_trials = 0
-    while n_trials <= MAX_TRIALS:
+    while n_trials <= max_trials:
         try:
             params, trial_index = ax_client.get_next_trial()
         except MaxParallelismReachedException:
-            await asyncio.sleep(WAIT_TIME)
+            await asyncio.sleep(config.WAIT_TIME)
             continue
 
         n_trials += 1
