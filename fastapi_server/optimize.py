@@ -14,29 +14,27 @@ MAX_TRIALS = 50 # maximum number of trials to evaluate
 WAIT_TIME = 5 # wait time before attempting to generate new trial, seconds
 
 RESET_DB = False # reset database and create a new experiment
-
-def get_db_settings():
-    DB_URL = os.getenv('DATABASE_URL')
-    return DBSettings(url=DB_URL)
-
-def initialize_db():
-    DB_URL = os.getenv('DATABASE_URL')
-    init_engine_and_session_factory(url=DB_URL)
-    engine = get_engine()
-    create_all_tables(engine)
+DB_URL = os.getenv('DATABASE_URL')
 
 def create_ax_client():
     # Create Ax client
-    ax_client = AxClient(db_settings=get_db_settings())
+    ax_client = AxClient(db_settings=DBSettings(url=DB_URL))
+
+    # Initialize database
+    init_engine_and_session_factory(url=DB_URL)
+    engine = get_engine()
+    create_all_tables(engine)
 
     # Create/load experiment
     try:
         ax_client.load_experiment_from_database('sloshzero')
         logging.info("Ax client created with loaded experiment from database")
     except Exception:
-        initialize_db()
         create_experiment(ax_client)
         logging.info("Ax client created with new experiment")
+
+    if ax_client is None:
+        raise KeyboardInterrupt
 
     return ax_client
 
