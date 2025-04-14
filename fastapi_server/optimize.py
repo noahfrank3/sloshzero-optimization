@@ -4,6 +4,7 @@ import os
 
 from ax.exceptions.generation_strategy import MaxParallelismReachedException
 from ax.service.ax_client import AxClient, ObjectiveProperties
+from ax.storage.sqa_store.db import init_engine_and_session_factory, get_engine, create_all_tables
 from ax.storage.sqa_store.structs import DBSettings
 
 F_SLOSH_MAX = 5 # maximum value for sloshing force
@@ -18,21 +19,28 @@ def get_db_settings():
     DB_URL = os.getenv('DATABASE_URL')
     return DBSettings(url=DB_URL)
 
-def create_ax_client():
-    try:
-        ax_client = AxClient().load_experiment_from_database('sloshzero')
-        logging.info("Ax client created with loaded experiment from database")
-    except:
-        ax_client = create_new_ax_client()
-        logging.info("Ax client created with new experiment")
+def initialize_db()
+    DB_URL = os.getenv('DATABASE_URL')
+    init_engine_and_session_factory(url=DB_URL)
+    engine = get_engine()
+    create_all_tables(engine)
 
-    if ax_client is None:
-        logging.info("AX CLIENT IS NONE")
+def create_ax_client():
+    # Create Ax client
+    ax_client = AxClient(db_settings=get_db_settings())
+
+    # Create/load experiment
+    try:
+        ax_client.load_experiment_from_database('sloshzero')
+        logging.info("Ax client created with loaded experiment from database")
+    except Exception:
+        initialize_db()
+        create_experiment(ax_client)
+        logging.info("Ax client created with new experiment")
 
     return ax_client
 
-def create_new_ax_client():
-    ax_client = AxClient(db_settings=get_db_settings())
+def create_experiment(ax_client):
     ax_client.create_experiment(
         name='sloshzero',
         parameters=[
