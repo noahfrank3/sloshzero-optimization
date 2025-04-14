@@ -3,3 +3,4 @@ uvicorn
 ax-platform[mysql]
 dask[distributed]
 sqlalchemy
+psycopg2
