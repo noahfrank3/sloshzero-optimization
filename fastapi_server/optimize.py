@@ -19,7 +19,7 @@ def get_db_settings():
     DB_URL = os.getenv('DATABASE_URL')
     return DBSettings(url=DB_URL)
 
-def initialize_db()
+def initialize_db():
     DB_URL = os.getenv('DATABASE_URL')
     init_engine_and_session_factory(url=DB_URL)
     engine = get_engine()
