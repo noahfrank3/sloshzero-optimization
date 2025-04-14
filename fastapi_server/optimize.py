@@ -14,7 +14,7 @@ MAX_TRIALS = 50 # maximum number of trials to evaluate
 WAIT_TIME = 5 # wait time before attempting to generate new trial, seconds
 
 RESET_DB = False # reset database and create a new experiment
-DB_URL = os.getenv('DATABASE_URL')
+DB_URL = os.getenv('MYSQL_URL')
 
 def create_ax_client():
     # Create Ax client
