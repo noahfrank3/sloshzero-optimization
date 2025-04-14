@@ -30,7 +30,7 @@ def verify_api_key(api_key):
     return api_key
 
 @app.get("/run-optimization")
-async def run_optimization(api_key: str = Depends(verify_api_key), max_trials):
+async def run_optimization(max_trials, api_key: str = Depends(verify_api_key)):
     await schedule_trials(ax_client, dask_client, max_trials)
     return {'message': f"Running {max_trials} trials..."}
 
