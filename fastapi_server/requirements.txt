@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-ax-platform[mysql]
+ax-platform
 dask[distributed]
 sqlalchemy
 psycopg2

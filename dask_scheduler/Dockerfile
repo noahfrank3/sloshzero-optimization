@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:latest
 WORKDIR /app
 COPY . .
 RUN pip install "dask[distributed]"
