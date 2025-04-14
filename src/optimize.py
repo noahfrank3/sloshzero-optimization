@@ -18,10 +18,7 @@ def get_db_settings():
     DB_URL = os.getenv('DATABASE_URL')
     return DBSettings(url=DB_URL)
 
-def create_ax_client_REAL():
-    if RESET_DB:
-        reset_db()
-
+def create_ax_client():
     try:
         ax_client = AxClient().load_experiment_from_database('sloshzero')
         logging.info("Ax client created with loaded experiment from database")
@@ -31,7 +28,7 @@ def create_ax_client_REAL():
 
     return ax_client
 
-def create_ax_client():
+def create_new_ax_client():
     ax_client = AxClient().create_experiment(
         name='sloshzero',
         parameters=[
