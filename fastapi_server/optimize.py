@@ -78,7 +78,7 @@ async def run_trial(ax_client, dask_client, params, trial_index):
     logging.info(f"Processing trial {trial_index}...")
 
     # Evaluate F_slosh
-    future = dask_client.submit(get_F_slosh, params)
+    future = dask_client.submit('F_slosh', params)
     logging.info(f"Trial {trial_index} submitted to Dask")
 
     loop = asyncio.get_running_loop()
@@ -86,7 +86,7 @@ async def run_trial(ax_client, dask_client, params, trial_index):
     logging.info(f"Trial {trial_index} F_slosh_val received from Dask")
 
     # Evaluate V_baffle
-    V_baffle_val = get_V_baffle(params)
+    V_baffle_val = V_baffle(params)
 
     # Complete trial
     objectives = {'F_slosh': F_slosh_val, 'V_baffle': (V_baffle_val, 0.0)}
@@ -95,14 +95,14 @@ async def run_trial(ax_client, dask_client, params, trial_index):
                  f"{objectives['F_slosh']} and V_baffle = "
                  f"{objectives['V_baffle'][0]}")
 
-def get_F_slosh(params):
-    x = params.get('x')
-    y = params.get('y')
+def F_slosh(params):
+    x = params['x']
+    y = params['y']
 
     return x**2 + y**2
 
-def get_V_baffle(params):
-    x = params.get('x')
-    y = params.get('y')
+def V_baffle(params):
+    x = params['x']
+    y = params['y']
 
     return (x - 1)**2 + (y - 1)**2

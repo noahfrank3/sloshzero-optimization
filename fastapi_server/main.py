@@ -15,7 +15,7 @@ API_KEY = os.getenv('API_KEY')
 # Configure logging
 logging.basicConfig(level=logging.INFO) #, filename=LOG_PATH)
 logging.info(f"This server is licensed under AGPL-3.0. "
-             "Source code: {GITHUB_REPO}")
+             f"Source code: {GITHUB_REPO}")
 
 # Create Dask client
 scheduler_address = os.getenv('SCHEDULER_ADDRESS')
