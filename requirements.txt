@@ -1,4 +1,4 @@
 fastapi
 uvicorn
 ax-platform
-dask[dstributed]
+dask[distributed]
