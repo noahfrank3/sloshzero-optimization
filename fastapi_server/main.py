@@ -7,7 +7,6 @@ from fastapi import FastAPI, Depends, HTTPException
 from optimize import create_ax_client, generate_trials
 
 GITHUB_REPO = 'https://github.com/noahfrank3/sloshzero-optimization'
-# LOG_PATH = os.path.join(os.path.dirname(__file__), '../logs/server.log')
 
 # Create FastAPI app
 app = FastAPI()
