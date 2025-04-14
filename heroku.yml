@@ -1,22 +1,14 @@
----
-setup:
-  addons:
-    - plan: heroku-postgresql
-      as: DATABASE
-
 build:
   docker:
-    web: docker/Dockerfile.server
-    scheduler: docker/Dockerfile.scheduler
-    worker: docker/Dockerfile.worker
+    server: ./docker/Dockerfile.server
+    scheduler: ./docker/Dockerfile.scheduler
+    worker: ./docker/Dockerfile.worker
 
 release:
   command:
-    - pip install -r requirements.server.txt
-    - pip install -r requirements.scheduler.txt
-    - pip install -r requirements.worker.txt
+    - dask-scheduler
 
 run:
-  web: uvicorn src.main:app --host=0.0.0.0 --port=${FASTAPI_PORT}
-  scheduler: dask scheduler
-  worker: dask worker ${SCHEDULER_ADDRESS}
+  server: uvicorn src.main:app --host 0.0.0.0 --port $FASTAPI_PORT
+  scheduler: dask-scheduler
+  worker: dask-worker --scheduler_address=$SCHEDULER_ADDRESS
