@@ -4,3 +4,4 @@ ax-platform[mysql]
 dask[distributed]
 sqlalchemy
 mysqlclient
+apscheduler

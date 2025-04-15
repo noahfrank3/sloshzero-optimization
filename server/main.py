@@ -1,12 +1,16 @@
 import logging
 import os
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from dask.distributed import Client
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from sqlalchemy import create_engine
 
 import config
 from optimize import create_ax_client, schedule_trials
+from results import generate_plots
 
 # Create FastAPI app
 app = FastAPI()
@@ -17,12 +21,30 @@ logging.basicConfig(level=logging.INFO) #, filename=LOG_PATH)
 logging.info(f"This server is licensed under AGPL-3.0. "
              f"Source code: {config.GITHUB_REPO}")
 
+DB_URL = os.getenv('MYSQL_URL')
+engine = create_engine(DB_URL)
+with engine.connect() as connection:
+    connection.execute("SET GLOBAL innodb_default_row_format=DYNAMIC;")
+
 # Create Dask client
 scheduler_url = os.getenv('SCHEDULER_URL')
 dask_client = Client(scheduler_url)
 
 # Create Ax client
 ax_client = create_ax_client()
+
+@app.on_event('startup')
+async def render_initial_plots():
+    generate_plots()
+    logging.info("Initial plots generated!")
+
+app.mount('/static', StaticFiles(directory='static'), name='static')
+
+@app.on_event('startup')
+async def static_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(generate_plots, 'interval', minutes=30)
+    scheduler.start()
 
 def verify_api_key(api_key):
     if api_key != API_KEY:
