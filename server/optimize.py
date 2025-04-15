@@ -5,7 +5,8 @@ import os
 from ax.exceptions.core import ExperimentNotFoundError
 from ax.exceptions.generation_strategy import MaxParallelismReachedException
 from ax.service.ax_client import AxClient, ObjectiveProperties
-from ax.storage.sqa_store.db import init_engine_and_session_factory, get_engine, create_all_tables, SQAConfig
+from ax.storage.sqa_store.db import init_engine_and_session_factory, get_engine, create_all_tables
+from ax.storage.sqa_store.sqa_config import SQAConfig
 from ax.storage.sqa_store.structs import DBSettings
 
 import config
