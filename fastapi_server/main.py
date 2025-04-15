@@ -3,6 +3,7 @@ import os
 
 from dask.distributed import Client
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.responses import RedirectResponse
 
 import config
 from optimize import create_ax_client, schedule_trials
@@ -29,10 +30,18 @@ def verify_api_key(api_key):
         raise HTTPException(status_code=403, detail="Unauthorized access")
     return api_key
 
-@app.get("/run-optimization")
+@app.get('/run-optimization')
 async def run_optimization(max_trials, api_key: str = Depends(verify_api_key)):
     await schedule_trials(ax_client, dask_client, max_trials)
     return {'message': f"Running {max_trials} trials..."}
+
+@app.get('/')
+async def redirect_root():
+    return RedirectResponse(url='/results')
+
+@app.get('/results')
+async def results():
+    pass
 
 @app.get("/license")
 async def license_info():
