@@ -5,3 +5,4 @@ dask[distributed]
 sqlalchemy
 mysqlclient
 apscheduler
+matplotlib
