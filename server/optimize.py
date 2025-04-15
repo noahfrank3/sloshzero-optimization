@@ -6,13 +6,10 @@ from ax.exceptions.core import ExperimentNotFoundError
 from ax.exceptions.generation_strategy import MaxParallelismReachedException
 from ax.service.ax_client import AxClient, ObjectiveProperties
 from ax.storage.sqa_store.db import init_engine_and_session_factory, get_engine, create_all_tables
-from ax.storage.sqa_store.sqa_config import SQAConfig
 from ax.storage.sqa_store.structs import DBSettings
 
 import config
 from V_baffle import V_baffle
-
-config = SQAConfig(parameter_column_type="TEXT")
 
 DB_URL = os.getenv('MYSQL_URL')
 DB_URL = DB_URL.replace('mysql://', 'mysql+mysqldb://', 1)

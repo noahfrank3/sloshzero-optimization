@@ -25,6 +25,7 @@ DB_URL = os.getenv('MYSQL_URL')
 engine = create_engine(DB_URL)
 with engine.connect() as connection:
     connection.execute("SET GLOBAL innodb_default_row_format=DYNAMIC;")
+    connection.execute("ALTER TABLE ax_experiment MODIFY COLUMN parameter_column TEXT;")
 
 # Create Dask client
 scheduler_url = os.getenv('SCHEDULER_URL')
