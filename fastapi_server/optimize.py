@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 
+from ax.exceptions.core import ExperimentNotFoundError
 from ax.exceptions.generation_strategy import MaxParallelismReachedException
 from ax.service.ax_client import AxClient, ObjectiveProperties
 from ax.storage.sqa_store.db import init_engine_and_session_factory, get_engine, create_all_tables
@@ -24,7 +25,7 @@ def create_ax_client():
     try:
         ax_client.load_experiment_from_database('sloshzero')
         logging.info("Ax client created with loaded experiment from database")
-    except Exception:
+    except ExperimentNotFoundError:
         create_experiment(ax_client)
         logging.info("Ax client created with new experiment")
 
