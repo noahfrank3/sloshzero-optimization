@@ -8,6 +8,7 @@ from ax.storage.sqa_store.db import init_engine_and_session_factory, get_engine,
 from ax.storage.sqa_store.structs import DBSettings
 
 import config
+from V_baffle import V_baffle
 
 DB_URL = os.getenv('MYSQL_URL')
 DB_URL = DB_URL.replace('mysql://', 'mysql+mysqldb://', 1)
@@ -102,15 +103,3 @@ async def run_trial(ax_client, dask_client, params, trial_index):
     logging.info(f"Trial {trial_index} completed with F_slosh = "
                  f"{objectives['F_slosh']} and V_baffle = "
                  f"{objectives['V_baffle'][0]}")
-
-def F_slosh(params):
-    x = params['x']
-    y = params['y']
-
-    return x**2 + y**2
-
-def V_baffle(params):
-    x = params['x']
-    y = params['y']
-
-    return (x - 1)**2 + (y - 1)**2
