@@ -3,4 +3,4 @@ uvicorn
 ax-platform[mysql]
 dask[distributed]
 sqlalchemy
-mysql-connector-python
+pymysql
