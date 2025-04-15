@@ -10,6 +10,7 @@ from ax.storage.sqa_store.structs import DBSettings
 import config
 
 DB_URL = os.getenv('MYSQL_URL')
+DB_URL = DB_URL.replace('mysql://', 'mysql+mysqldb://', 1)
 
 def create_ax_client():
     # Create Ax client
