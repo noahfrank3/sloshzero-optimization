@@ -20,6 +20,7 @@ logging.info(f"This server is licensed under AGPL-3.0. "
 app = FastAPI()
 API_KEY = os.getenv('API_KEY')
 
+'''
 from sqlalchemy import create_engine
 db_url = os.getenv('MYSQL_URL')
 engine = create_engine(db_url)
@@ -52,6 +53,7 @@ with engine.connect() as connection:
     result = connection.execute("SHOW VARIABLES LIKE 'innodb_default_row_format';")
     for row in result:
         print("innodb_default_row_format:", row)
+'''
 
 @app.on_event('startup')
 async def initialize_ax_client():
