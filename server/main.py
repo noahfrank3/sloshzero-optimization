@@ -42,9 +42,16 @@ with engine.connect() as connection:
     connection.execute("SET GLOBAL max_connections = 300;")
     print("Updated max_connections to 300")
 
+    connection.execute("SET GLOBAL innodb_default_row_format=DYNAMIC;")
+    print("Updated innodb_default_row_format to DYNAMIC")
+
     result = connection.execute("SHOW VARIABLES LIKE 'max_connections';")
     for row in result:
         print("max_connections:", row)
+
+    result = connection.execute("SHOW VARIABLES LIKE 'innodb_default_row_format';")
+    for row in result:
+        print("innodb_default_row_format:", row)
 
 @app.on_event('startup')
 async def initialize_ax_client():
