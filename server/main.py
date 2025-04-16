@@ -38,8 +38,10 @@ async def initialize_dask_client():
     scheduler_url = os.getenv('SCHEDULER_URL')
     app.state.dask_client = Client(scheduler_url)
 
+# Mount static files for frontend
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
+# Create scheduler to periodically update frontend results
 @app.on_event('startup')
 async def initialize_static_scheduler():
     static_scheduler = BackgroundScheduler()
