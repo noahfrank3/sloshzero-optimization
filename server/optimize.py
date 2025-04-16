@@ -53,7 +53,7 @@ def create_ax_client():
     # Initialize database
     db_url = os.getenv('MYSQL_URL')
     db_url = db_url.replace('mysql://', 'mysql+mysqldb://', 1)
-    init_engine_and_session_factory(url=db_url)
+    init_engine_and_session_factory(url=db_url, connect_args={"init_command": "SET SESSION innodb_default_row_format=DYNAMIC;"})
 
     # Create Ax client
     ax_client = AxClient(db_settings=DBSettings(url=db_url))
@@ -69,16 +69,6 @@ def create_ax_client():
     logging.info("Ax client created with new experiment")
 
     # Configure database settings
-    engine = get_engine()
-    with engine.connect() as connection:
-        # Perform the migration
-        connection.execute("""
-        ALTER TABLE parameter_v2
-        MODIFY target_value TEXT,
-        MODIFY choice_values TEXT,
-        MODIFY dependents TEXT,
-        MODIFY fixed_value TEXT;
-        """)
 
     if ax_client is None:
         raise KeyboardInterrupt
