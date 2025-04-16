@@ -56,6 +56,20 @@ def create_ax_client():
     init_engine_and_session_factory(
         url=db_url,
         connect_args={
+            "init_command": "SET SESSION innodb_default_row_format=DYNAMIC;"
+        },
+        pool_size=20,
+        max_overflow=10,
+        pool_timeout=30,
+        pool_pre_ping=True
+    )
+
+
+
+
+    init_engine_and_session_factory(
+        url=db_url,
+        connect_args={
             "init_command": "SET SESSION innodb_default_row_format=DYNAMIC;",
             "pool_size": 20,
             "max_overflow": 5,
