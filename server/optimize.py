@@ -59,12 +59,14 @@ def create_ax_client():
     ax_client = AxClient(db_settings=DBSettings(url=db_url))
 
     # Create/load experiment
+    '''
     try:
         load_experiment(ax_client)
         logging.info("Ax client created with loaded experiment from database")
     except ExperimentNotFoundError:
-        create_experiment(ax_client)
-        logging.info("Ax client created with new experiment")
+    '''
+    create_experiment(ax_client)
+    logging.info("Ax client created with new experiment")
 
     # Configure database settings
     engine = get_engine()
