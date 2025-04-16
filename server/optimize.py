@@ -53,29 +53,7 @@ def create_ax_client():
     # Initialize database
     db_url = os.getenv('MYSQL_URL')
     db_url = db_url.replace('mysql://', 'mysql+mysqldb://', 1)
-    init_engine_and_session_factory(
-        url=db_url,
-        connect_args={
-            "init_command": "SET SESSION innodb_default_row_format=DYNAMIC;"
-        },
-        pool_size=30,
-        max_overflow=15,
-        pool_timeout=60,
-        pool_pre_ping=True
-    )
-
-
-
-
-    init_engine_and_session_factory(
-        url=db_url,
-        connect_args={
-            "init_command": "SET SESSION innodb_default_row_format=DYNAMIC;",
-            "pool_size": 20,
-            "max_overflow": 5,
-            "pool_pre_ping": True
-        }
-    )
+    init_engine_and_session_factory(url=db_url)
 
     # Create Ax client
     ax_client = AxClient(db_settings=DBSettings(url=db_url))
