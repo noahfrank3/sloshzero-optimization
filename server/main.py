@@ -20,6 +20,28 @@ logging.info(f"This server is licensed under AGPL-3.0. "
 app = FastAPI()
 API_KEY = os.getenv('API_KEY')
 
+from sqlalchemy import create_engine
+db_url - os.getenv('MYSQL_URL')
+engine = create_engine(db_url)
+# Establish connection
+with engine.connect() as connection:
+    # Query database settings
+    result = connection.execute("SHOW VARIABLES LIKE 'max_connections';")
+    for row in result:
+        print("max_connections:", row)
+
+    result = connection.execute("SHOW VARIABLES LIKE 'innodb_page_size';")
+    for row in result:
+        print("innodb_page_size:", row)
+
+    result = connection.execute("SHOW VARIABLES LIKE 'innodb_default_row_format';")
+    for row in result:
+        print("innodb_default_row_format:", row)
+
+    # Example of updating settings (requires proper permissions)
+    connection.execute("SET GLOBAL max_connections = 300;")
+    print("Updated max_connections to 300")
+
 @app.on_event('startup')
 async def initialize_ax_client():
     app.state.ax_client = create_ax_client()

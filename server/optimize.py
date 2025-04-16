@@ -58,9 +58,9 @@ def create_ax_client():
         connect_args={
             "init_command": "SET SESSION innodb_default_row_format=DYNAMIC;"
         },
-        pool_size=20,
-        max_overflow=10,
-        pool_timeout=30,
+        pool_size=30,
+        max_overflow=15,
+        pool_timeout=60,
         pool_pre_ping=True
     )
 
