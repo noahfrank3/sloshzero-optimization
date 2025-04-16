@@ -13,8 +13,7 @@ from V_baffle import V_baffle
 
 def create_experiment(ax_client):
     # Initialize databse
-    engine = get_engine()
-    create_all_tables(engine)
+    create_all_tables(get_engine())
 
     # Create new experiment
     ax_client.create_experiment(
@@ -51,9 +50,9 @@ def load_experiment(ax_client):
 
 def create_ax_client():
     # Initialize database
-    db_url = os.getenv('MYSQL_URL')
-    db_url = db_url.replace('mysql://', 'mysql+mysqldb://', 1)
-    init_engine_and_session_factory(url=db_url, connect_args={"init_command": "SET GLOBAL innodb_strict_mode = 0;"})
+    db_url = os.getenv('DB_URL')
+    db_url = db_url.replace('postgresql', 'postgresql+psycopg2', 1)
+    init_engine_and_session_factory(url=db_url)
 
     # Create Ax client
     ax_client = AxClient(db_settings=DBSettings(url=db_url))
@@ -67,8 +66,6 @@ def create_ax_client():
     '''
     create_experiment(ax_client)
     logging.info("Ax client created with new experiment")
-
-    # Configure database settings
 
     if ax_client is None:
         raise KeyboardInterrupt
