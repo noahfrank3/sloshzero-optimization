@@ -1,8 +1,3 @@
-import os
-
-from ax.service.ax_client import AxClient
-from ax.storage.sqa_store.db import init_engine_and_session_factory
-from ax.storage.sqa_store.structs import DBSettings
 from matplotlib import font_manager
 from matplotlib import ticker
 import matplotlib.pyplot as plt
@@ -28,15 +23,6 @@ plt.rcParams['axes.titlesize'] = 16
 plt.rcParams['grid.linewidth'] = 0.25
 plt.rcParams['axes.labelpad'] = 15
 plt.rcParams['axes.titlepad'] = 15
-
-def load_ax_client():
-    DB_URL = os.getenv('MYSQL_URL')
-    DB_URL = DB_URL.replace('mysql://', 'mysql+mysqldb://', 1)
-
-    ax_client = AxClient(db_settings=DBSettings(url=DB_URL))
-    init_engine_and_session_factory(url=DB_URL)
-    ax_client.load_experiment_from_database('sloshzero')
-    return ax_client
 
 def pareto_frontier(ax_client):
     x =  list(ax_client.get_pareto_optimal_parameters().values())
@@ -83,9 +69,7 @@ def plot_trace(indicies, trace):
     fig.savefig('static/images/trace.svg', bbox_inches='tight', transparent=True)
     plt.close(fig)
 
-def generate_plots():
-    ax_client = load_ax_client()
-
+def generate_plots(ax_client):
     F_slosh_vals, V_baffle_vals = pareto_frontier(ax_client)
     plot_pareto_frontier(F_slosh_vals, V_baffle_vals)
 
