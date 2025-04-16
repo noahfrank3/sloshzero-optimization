@@ -11,9 +11,6 @@ from ax.storage.sqa_store.structs import DBSettings
 import config
 from V_baffle import V_baffle
 
-DB_URL = os.getenv('MYSQL_URL')
-DB_URL = DB_URL.replace('mysql://', 'mysql+mysqldb://', 1)
-
 def create_experiment(ax_client):
     # Initialize databse
     engine = get_engine()
@@ -49,23 +46,36 @@ def create_experiment(ax_client):
     logging.info("New Ax client created")
     return ax_client
 
+def load_experiment(ax_client):
+    ax_client.load_experiment_from_database('sloshzero')
+
 def create_ax_client():
     # Create Ax client
     ax_client = AxClient(db_settings=DBSettings(url=DB_URL))
 
     # Initialize database
-    init_engine_and_session_factory(url=DB_URL)
+    db_url = os.getenv('MYSQL_URL')
+    db_url = db_url.replace('mysql://', 'mysql+mysqldb://', 1)
+    init_engine_and_session_factory(url=db_url)
 
     # Create/load experiment
     try:
-        ax_client.load_experiment_from_database('sloshzero')
+        load_experiment(ax_client)
         logging.info("Ax client created with loaded experiment from database")
     except ExperimentNotFoundError:
         create_experiment(ax_client)
         logging.info("Ax client created with new experiment")
 
+    # Configure database settings
+    engine = get_engine()
+    with engine.connect() as connection:
+        connection.execute("SET GLOBAL innodb_default_row_format=DYNAMIC;")
+        connection.execute("ALTER TABLE ax_experiment MODIFY COLUMN parameter_column TEXT;")
+
     if ax_client is None:
         raise KeyboardInterrupt
+    else:
+        raise
 
     return ax_client
 

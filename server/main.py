@@ -6,7 +6,6 @@ from dask.distributed import Client
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy import create_engine
 
 import config
 from optimize import create_ax_client, schedule_trials
@@ -23,14 +22,6 @@ API_KEY = os.getenv('API_KEY')
 
 @app.on_event('startup')
 async def initialize_ax_client():
-    # Connect to database
-    db_url = os.getenv('MYSQL_URL')
-    engine = create_engine(db_url)
-    with engine.connect() as connection:
-        connection.execute("SET GLOBAL innodb_default_row_format=DYNAMIC;")
-        connection.execute("ALTER TABLE ax_experiment MODIFY COLUMN parameter_column TEXT;")
-
-    # Initialize ax client
     app.state.ax_client = create_ax_client()
 
 @app.on_event('startup')
