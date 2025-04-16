@@ -11,12 +11,8 @@ from ax.storage.sqa_store.structs import DBSettings
 import config
 from V_baffle import V_baffle
 
-def create_experiment(ax_client):
-    # Initialize databse
-    create_all_tables(get_engine())
-
-    # Create new experiment
-    ax_client.create_experiment(
+def create_experiment():
+    return AxClient().create_experiment(
         name='sloshzero',
         parameters=[
                 {
@@ -41,31 +37,14 @@ def create_experiment(ax_client):
                 )
         }
     )
-    
-    logging.info("New Ax client created")
-    return ax_client
-
-def load_experiment(ax_client):
-    ax_client.load_experiment_from_database('sloshzero')
 
 def create_ax_client():
-    # Initialize database
-    db_url = os.getenv('DATABASE_URL')
-    db_url = db_url.replace('postgresql', 'postgresql+psycopg2', 1)
-    init_engine_and_session_factory(url=db_url)
-
-    # Create Ax client
-    ax_client = AxClient(db_settings=DBSettings(url=db_url))
-
-    # Create/load experiment
-    '''
     try:
-        load_experiment(ax_client)
+        ax_client = AxClient.load_from_json_file('/data/sloshzero.json')
         logging.info("Ax client created with loaded experiment from database")
-    except ExperimentNotFoundError:
-    '''
-    create_experiment(ax_client)
-    logging.info("Ax client created with new experiment")
+    except FileNotFoundError:
+        ax_client = create_experiment()
+        logging.info("Ax client created with new experiment")
 
     if ax_client is None:
         raise KeyboardInterrupt
@@ -94,6 +73,9 @@ async def run_trial(ax_client, dask_client, params, trial_index):
     logging.info(f"Trial {trial_index} completed with F_slosh = "
                  f"{objectives['F_slosh']} and V_baffle = "
                  f"{objectives['V_baffle'][0]}")
+
+    # Save data to json
+    ax_client.save_to_json_file('/data/sloshzero.json')
 
 async def schedule_trials(ax_client, dask_client, max_trials):
     n_trials = 0

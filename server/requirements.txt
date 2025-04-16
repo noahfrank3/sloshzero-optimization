@@ -1,8 +1,6 @@
 fastapi
 uvicorn
-ax-platform[postgresql]
+ax-platform
 dask[distributed]
 apscheduler
 matplotlib
-sqlalchemy<2.0
-psycopg2
