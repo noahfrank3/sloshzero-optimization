@@ -42,6 +42,10 @@ with engine.connect() as connection:
     connection.execute("SET GLOBAL max_connections = 300;")
     print("Updated max_connections to 300")
 
+    result = connection.execute("SHOW VARIABLES LIKE 'max_connections';")
+    for row in result:
+        print("max_connections:", row)
+
 @app.on_event('startup')
 async def initialize_ax_client():
     app.state.ax_client = create_ax_client()
