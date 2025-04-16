@@ -63,7 +63,7 @@ async def redirect_root():
 async def results():
     pass
 
-@app.get("/license")
+@app.get('/license')
 async def license_info():
     return {
         'license': 'AGPL-3.0',
