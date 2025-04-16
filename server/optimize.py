@@ -14,26 +14,6 @@ from V_baffle import V_baffle
 DB_URL = os.getenv('MYSQL_URL')
 DB_URL = DB_URL.replace('mysql://', 'mysql+mysqldb://', 1)
 
-def create_ax_client():
-    # Create Ax client
-    ax_client = AxClient(db_settings=DBSettings(url=DB_URL))
-
-    # Initialize database
-    init_engine_and_session_factory(url=DB_URL)
-
-    # Create/load experiment
-    try:
-        ax_client.load_experiment_from_database('sloshzero')
-        logging.info("Ax client created with loaded experiment from database")
-    except ExperimentNotFoundError:
-        create_experiment(ax_client)
-        logging.info("Ax client created with new experiment")
-
-    if ax_client is None:
-        raise KeyboardInterrupt
-
-    return ax_client
-
 def create_experiment(ax_client):
     # Initialize databse
     engine = get_engine()
@@ -69,20 +49,25 @@ def create_experiment(ax_client):
     logging.info("New Ax client created")
     return ax_client
 
-async def schedule_trials(ax_client, dask_client, max_trials):
-    n_trials = 0
-    while n_trials <= max_trials:
-        try:
-            params, trial_index = ax_client.get_next_trial()
-        except MaxParallelismReachedException:
-            await asyncio.sleep(config.WAIT_TIME)
-            continue
+def create_ax_client():
+    # Create Ax client
+    ax_client = AxClient(db_settings=DBSettings(url=DB_URL))
 
-        n_trials += 1
-        logging.info(f"Trial {trial_index} generated with x = "
-                     f"{params.get('x')} and y = {params.get('y')}")
-        asyncio.create_task(
-                run_trial(ax_client, dask_client, params, trial_index))
+    # Initialize database
+    init_engine_and_session_factory(url=DB_URL)
+
+    # Create/load experiment
+    try:
+        ax_client.load_experiment_from_database('sloshzero')
+        logging.info("Ax client created with loaded experiment from database")
+    except ExperimentNotFoundError:
+        create_experiment(ax_client)
+        logging.info("Ax client created with new experiment")
+
+    if ax_client is None:
+        raise KeyboardInterrupt
+
+    return ax_client
 
 async def run_trial(ax_client, dask_client, params, trial_index):
     logging.info(f"Processing trial {trial_index}...")
@@ -104,3 +89,18 @@ async def run_trial(ax_client, dask_client, params, trial_index):
     logging.info(f"Trial {trial_index} completed with F_slosh = "
                  f"{objectives['F_slosh']} and V_baffle = "
                  f"{objectives['V_baffle'][0]}")
+
+async def schedule_trials(ax_client, dask_client, max_trials):
+    n_trials = 0
+    while n_trials <= max_trials:
+        try:
+            params, trial_index = ax_client.get_next_trial()
+        except MaxParallelismReachedException:
+            await asyncio.sleep(config.WAIT_TIME)
+            continue
+
+        n_trials += 1
+        logging.info(f"Trial {trial_index} generated with x = "
+                     f"{params.get('x')} and y = {params.get('y')}")
+        asyncio.create_task(
+                run_trial(ax_client, dask_client, params, trial_index))
