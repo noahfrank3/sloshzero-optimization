@@ -69,10 +69,12 @@ def create_ax_client():
     logging.info("Ax client created with new experiment")
 
     # Configure database settings
+    '''
     engine = get_engine()
     with engine.connect() as connection:
         connection.execute("SET GLOBAL innodb_default_row_format=DYNAMIC;")
         connection.execute("ALTER TABLE experiment_v2 MODIFY COLUMN parameter_column TEXT;")
+    '''
 
     if ax_client is None:
         raise KeyboardInterrupt
