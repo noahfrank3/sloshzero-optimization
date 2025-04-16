@@ -50,7 +50,7 @@ def load_experiment(ax_client):
 
 def create_ax_client():
     # Initialize database
-    db_url = os.getenv('DB_URL')
+    db_url = os.getenv('DATABASE_URL')
     db_url = db_url.replace('postgresql', 'postgresql+psycopg2', 1)
     init_engine_and_session_factory(url=db_url)
 
