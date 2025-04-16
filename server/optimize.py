@@ -48,11 +48,6 @@ def create_ax_client():
         ax_client = create_experiment()
         logging.info("Ax client created with new experiment")
 
-    if ax_client is None:
-        raise KeyboardInterrupt
-    else:
-        raise
-
     return ax_client
 
 async def run_trial(ax_client, dask_client, params, trial_index):
