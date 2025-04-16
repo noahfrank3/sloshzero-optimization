@@ -12,7 +12,8 @@ import config
 from V_baffle import V_baffle
 
 def create_experiment():
-    return AxClient().create_experiment(
+    ax_client = AxClient()
+    ax_client.create_experiment(
         name='sloshzero',
         parameters=[
                 {
@@ -37,6 +38,7 @@ def create_experiment():
                 )
         }
     )
+    return ax_client
 
 def create_ax_client():
     try:
