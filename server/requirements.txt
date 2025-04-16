@@ -4,3 +4,4 @@ ax-platform
 dask[distributed]
 apscheduler
 matplotlib
+sqlalchemy<2.0
