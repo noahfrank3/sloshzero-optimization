@@ -36,7 +36,7 @@ app.mount('/static', StaticFiles(directory='static'), name='static')
 @app.on_event('startup')
 async def initialize_static_scheduler():
     static_scheduler = BackgroundScheduler()
-    static_scheduler.add_job(generate_plots, 'interval', minutes=30)
+    static_scheduler.add_job(generate_plots, 'interval', minutes=30, args=[app.state.ax_client])
     static_scheduler.start()
     app.state.static_scheduler = static_scheduler
 
