@@ -5,4 +5,4 @@ dask[distributed]
 apscheduler
 matplotlib
 sqlalchemy
-psycopg
+psycopg2
