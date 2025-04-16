@@ -21,7 +21,7 @@ app = FastAPI()
 API_KEY = os.getenv('API_KEY')
 
 from sqlalchemy import create_engine
-db_url - os.getenv('MYSQL_URL')
+db_url = os.getenv('MYSQL_URL')
 engine = create_engine(db_url)
 # Establish connection
 with engine.connect() as connection:
