@@ -52,10 +52,13 @@ def verify_api_key(api_key):
     if api_key != API_KEY:
         logging.warning("Unauthorized access attempt detected!")
         raise HTTPException(status_code=403, detail="Unauthorized access")
-    return api_key
+    else:
+        logging.info("API key verified!")
+        return api_key
 
 @app.get('/run-optimization')
 async def run_optimization(max_trials, api_key: str = Depends(verify_api_key)):
+    print(app.state.dask_client.scheduler_info()) ### REMOVE
     await schedule_trials(app.state.ax_client, app.state.dask_client, int(max_trials))
     return {'message': f"Running {max_trials} trials..."}
 
