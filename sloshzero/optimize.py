@@ -1,15 +1,12 @@
 import asyncio
 import logging
-import os
 
-from ax.exceptions.core import ExperimentNotFoundError
 from ax.exceptions.generation_strategy import MaxParallelismReachedException
 from ax.service.ax_client import AxClient, ObjectiveProperties
-from ax.storage.sqa_store.db import init_engine_and_session_factory, get_engine, create_all_tables
-from ax.storage.sqa_store.structs import DBSettings
 
 import config
 from V_baffle import V_baffle
+from worker import get_F_slosh
 
 def create_experiment():
     ax_client = AxClient()
@@ -54,7 +51,7 @@ async def run_trial(ax_client, dask_client, params, trial_index):
     logging.info(f"Processing trial {trial_index}...")
 
     # Evaluate F_slosh
-    future = dask_client.submit('F_slosh', params)
+    future = dask_client.submit(get_F_slosh, params)
     logging.info(f"Trial {trial_index} submitted to Dask")
 
     loop = asyncio.get_running_loop()
