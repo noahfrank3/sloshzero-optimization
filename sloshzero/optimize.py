@@ -73,7 +73,7 @@ async def run_trial(ax_client, dask_client, params, trial_index):
 async def schedule_trials(ax_client, dask_client, max_trials):
     n_trials = 0
     while n_trials <= max_trials:
-        if ax_client.get_current_trial_generation_limit() > 0:
+        if ax_client.get_current_trial_generation_limit()[0] > 0:
             params, trial_index = ax_client.get_next_trial()
         else:
             await asyncio.sleep(config.WAIT_TIME)
