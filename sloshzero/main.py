@@ -4,7 +4,7 @@ import os
 from apscheduler.schedulers.background import BackgroundScheduler
 from dask.distributed import Client
 from fastapi import FastAPI, Depends, HTTPException
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 import config
@@ -44,6 +44,10 @@ async def initialize_static_scheduler():
 async def close_scheduler():
     app.state.static_scheduler.shutdown(wait=False)
 
+@app.on_event('shutdown')
+async def save_results():
+    app.state.ax_client.save_to_json_file('/data/sloshzero.json')
+
 def verify_api_key(api_key):
     if api_key != API_KEY:
         logging.warning("Unauthorized access attempt detected!")
@@ -55,13 +59,20 @@ async def run_optimization(max_trials, api_key: str = Depends(verify_api_key)):
     await schedule_trials(app.state.ax_client, app.state.dask_client, int(max_trials))
     return {'message': f"Running {max_trials} trials..."}
 
+@app.get('/download_results')
+async def download_results():
+    if os.path.exists('/data/sloshzero.json'):
+        return FileResponse('/data/sloshzero.json', media_type='application/json', filename='sloshzero.json')
+
 @app.get('/')
 async def redirect_root():
     return RedirectResponse(url='/results')
 
 @app.get('/results')
 async def results():
-    pass
+    with open("static/index.html", "r") as file:
+        html_content = file.read()
+    return HTMLResponse(content=html_content, media_type="text/html")
 
 @app.get('/license')
 async def license_info():
