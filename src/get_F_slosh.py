@@ -1,5 +1,8 @@
 def get_F_slosh(params):
-    exec('from F_slosh import F_slosh')
+    try:
+        from F_slosh import F_slosh
+    except NameError:
+        pass
 
     # Unpack parameters
     '''
@@ -11,6 +14,9 @@ def get_F_slosh(params):
     '''
 
     # Calculate and return F_slosh
-    F_slosh_val = F_slosh(params)
+    try:
+        F_slosh_val = F_slosh(params)
+    except NameError:
+        pass
     # F_slosh_val = F_slosh(x_1, x_2, x_3, d_pt, s_d)
     return F_slosh_val
