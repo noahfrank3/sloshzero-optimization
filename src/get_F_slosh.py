@@ -1,5 +1,5 @@
 def get_F_slosh(params):
-    from F_slosh import F_slosh
+    exec('from F_slosh import F_slosh')
 
     # Unpack parameters
     '''
