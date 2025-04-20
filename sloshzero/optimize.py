@@ -48,7 +48,7 @@ def create_ax_client(reset_experiment):
     try:
         ax_client = AxClient.load_from_json_file(DATA_PATH)
         logging.info("Ax client created with loaded experiment from database")
-    except FileNotFoundError:
+    except Exception:
         ax_client = create_experiment()
         logging.info("Ax client created with new experiment")
 
