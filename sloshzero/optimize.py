@@ -39,7 +39,12 @@ def create_experiment():
     )
     return ax_client
 
-def create_ax_client():
+def create_ax_client(reset_experiment):
+    if reset_experiment:
+        with open(DATA_PATH, 'w'):
+            pass
+        logging.warning("Ax experiment reset!")
+
     try:
         ax_client = AxClient.load_from_json_file(DATA_PATH)
         logging.info("Ax client created with loaded experiment from database")
@@ -74,10 +79,8 @@ async def run_trial(ax_client, dask_client, params, trial_index):
     ax_client.save_to_json_file(DATA_PATH)
     generate_plots(ax_client)
 
-async def schedule_trials(ax_client, dask_client, max_trials, reset_experiment):
-    if reset_experiment:
-        with open(DATA_PATH, 'w'):
-            pass
+async def schedule_trials(dask_client, max_trials, reset_experiment):
+    ax_client = create_ax_client(reset_experiment)
 
     n_trials = 0
     logging.info(f"Trial generation limit: {ax_client.get_current_trial_generation_limit()[0]}")

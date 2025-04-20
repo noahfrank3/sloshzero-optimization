@@ -23,17 +23,9 @@ API_KEY = os.getenv('API_KEY')
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
 @app.on_event('startup')
-async def initialize_clients():
-    # Ax client
-    app.state.ax_client = create_ax_client()
-
-    # Dask client
+async def initialize_dask_client():
     scheduler_url = os.getenv('SCHEDULER_URL')
     app.state.dask_client = Client(scheduler_url)
-
-@app.on_event('shutdown')
-async def save_results():
-    app.state.ax_client.save_to_json_file('/data/sloshzero.json')
 
 def verify_api_key(api_key):
     if api_key != API_KEY:
