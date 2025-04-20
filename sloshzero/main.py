@@ -45,7 +45,7 @@ def verify_api_key(api_key):
 
 @app.get('/run-optimization')
 async def run_optimization(max_trials, reset_experiment, api_key: str = Depends(verify_api_key)):
-    await schedule_trials(app.state.ax_client, app.state.dask_client, int(max_trials), reset_experiment)
+    await schedule_trials(app.state.ax_client, app.state.dask_client, int(max_trials), eval(reset_experiment))
     return {'message': f"Running {max_trials} trials..."}
 
 @app.get('/download_results')
