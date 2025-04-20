@@ -1,4 +1,4 @@
-def V_baffle(params):
+def get_V_baffle(params):
     x = params['x']
     y = params['y']
 

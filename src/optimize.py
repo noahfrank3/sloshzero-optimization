@@ -5,8 +5,8 @@ from ax.service.ax_client import AxClient, ObjectiveProperties
 
 import config
 from results import generate_plots
-from V_baffle import V_baffle
-from worker import get_F_slosh
+from get_V_baffle import get_V_baffle
+from get_F_slosh import get_F_slosh
 
 DATA_PATH = '/data/sloshzero.json'
 
@@ -66,7 +66,7 @@ async def run_trial(ax_client, dask_client, params, trial_index):
     logging.info(f"Trial {trial_index} F_slosh_val received from Dask")
 
     # Evaluate V_baffle
-    V_baffle_val = V_baffle(params)
+    V_baffle_val = get_V_baffle(params)
 
     # Complete trial
     objectives = {'F_slosh': F_slosh_val, 'V_baffle': V_baffle_val}
