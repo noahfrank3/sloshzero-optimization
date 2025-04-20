@@ -8,6 +8,8 @@ from results import generate_plots
 from V_baffle import V_baffle
 from worker import get_F_slosh
 
+DATA_PATH = '/data/sloshzero.json'
+
 def create_experiment():
     ax_client = AxClient()
     ax_client.create_experiment(
@@ -39,7 +41,7 @@ def create_experiment():
 
 def create_ax_client():
     try:
-        ax_client = AxClient.load_from_json_file('/data/sloshzero.json')
+        ax_client = AxClient.load_from_json_file(DATA_PATH)
         logging.info("Ax client created with loaded experiment from database")
     except FileNotFoundError:
         ax_client = create_experiment()
@@ -69,10 +71,14 @@ async def run_trial(ax_client, dask_client, params, trial_index):
                  f"{objectives['V_baffle'][0]}")
 
     # Save data to json and generate plots
-    ax_client.save_to_json_file('/data/sloshzero.json')
+    ax_client.save_to_json_file(DATA_PATH)
     generate_plots(ax_client)
 
-async def schedule_trials(ax_client, dask_client, max_trials):
+async def schedule_trials(ax_client, dask_client, max_trials, reset_experiment):
+    if reset_experiment:
+        with open(DATA_PATH, 'w'):
+            pass
+
     n_trials = 0
     logging.info(f"Trial generation limit: {ax_client.get_current_trial_generation_limit()[0]}")
     while n_trials <= max_trials:

@@ -23,11 +23,11 @@ API_KEY = os.getenv('API_KEY')
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
 @app.on_event('startup')
-async def initialize_ax_client():
+async def initialize_clients():
+    # Ax client
     app.state.ax_client = create_ax_client()
 
-@app.on_event('startup')
-async def initialize_dask_client():
+    # Dask client
     scheduler_url = os.getenv('SCHEDULER_URL')
     app.state.dask_client = Client(scheduler_url)
 
@@ -44,8 +44,8 @@ def verify_api_key(api_key):
         return api_key
 
 @app.get('/run-optimization')
-async def run_optimization(max_trials, api_key: str = Depends(verify_api_key)):
-    await schedule_trials(app.state.ax_client, app.state.dask_client, int(max_trials))
+async def run_optimization(max_trials, reset_experiment, api_key: str = Depends(verify_api_key)):
+    await schedule_trials(app.state.ax_client, app.state.dask_client, int(max_trials), reset_experiment)
     return {'message': f"Running {max_trials} trials..."}
 
 @app.get('/download_results')
