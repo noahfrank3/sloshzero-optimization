@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-ax-platform
-dask[distributed]
-python-worker
-matplotlib
-sqlalchemy<2.0
