@@ -87,6 +87,7 @@ def V_baffle(params):
 
 if __name__ == '__main__':
     ax_client = create_ax_client()
-    for _ in range(MAX_TRIALS):
+    for i in range(MAX_TRIALS):
+        logging.info(f"Trial index: {i}")
         run_trial(ax_client)
     ax_client.save_to_json_file('sloshzero.json')
