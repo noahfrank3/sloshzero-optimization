@@ -1,7 +1,6 @@
 import logging
 import os
 
-from apscheduler.schedulers.background import BackgroundScheduler
 from dask.distributed import Client
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
@@ -20,6 +19,9 @@ logging.info(f"This server is licensed under AGPL-3.0. "
 app = FastAPI()
 API_KEY = os.getenv('API_KEY')
 
+# Mount static files for frontend
+app.mount('/static', StaticFiles(directory='static'), name='static')
+
 @app.on_event('startup')
 async def initialize_ax_client():
     app.state.ax_client = create_ax_client()
@@ -28,21 +30,6 @@ async def initialize_ax_client():
 async def initialize_dask_client():
     scheduler_url = os.getenv('SCHEDULER_URL')
     app.state.dask_client = Client(scheduler_url)
-
-# Mount static files for frontend
-app.mount('/static', StaticFiles(directory='static'), name='static')
-
-# Create scheduler to periodically update frontend results
-@app.on_event('startup')
-async def initialize_static_scheduler():
-    static_scheduler = BackgroundScheduler()
-    static_scheduler.add_job(generate_plots, 'interval', minutes=30, args=[app.state.ax_client])
-    static_scheduler.start()
-    app.state.static_scheduler = static_scheduler
-
-@app.on_event('shutdown')
-async def close_scheduler():
-    app.state.static_scheduler.shutdown(wait=False)
 
 @app.on_event('shutdown')
 async def save_results():

@@ -4,6 +4,7 @@ import logging
 from ax.service.ax_client import AxClient, ObjectiveProperties
 
 import config
+from results import generate_plots
 from V_baffle import V_baffle
 from worker import get_F_slosh
 
@@ -67,13 +68,14 @@ async def run_trial(ax_client, dask_client, params, trial_index):
                  f"{objectives['F_slosh']} and V_baffle = "
                  f"{objectives['V_baffle'][0]}")
 
-    # Save data to json
+    # Save data to json and generate plots
     ax_client.save_to_json_file('/data/sloshzero.json')
+    generate_plots(ax_client)
 
 async def schedule_trials(ax_client, dask_client, max_trials):
     n_trials = 0
+    print(ax_client.get_current_trial_generation_limit()[0])
     while n_trials <= max_trials:
-        print(ax_client.get_current_trial_generation_limit()[0])
         if ax_client.get_current_trial_generation_limit()[0] > 0:
             params, trial_index = ax_client.get_next_trial()
         else:
