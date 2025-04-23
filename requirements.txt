@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 ax-platform
-dask[distributed]
-python-worker
 matplotlib
+numpy
+pandas
 sqlalchemy<2.0

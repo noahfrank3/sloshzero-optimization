@@ -1,0 +1,48 @@
+{
+    "general":
+    {
+        "github_repo": "https://github.com/noahfrank3/sloshzero-optimization",
+        "experiment_path": "/home/prongles/sloshzero-optimization/data/experiment.json",
+        "users_path": "/home/prongles/sloshzero-optimization/data/users.json",
+        "headkey_path": "/home/prongles/sloshzero-optimization/data/headkey.txt"
+    },
+    "objectives": [
+        {
+            "name": "F_slosh",
+            "minimize": true,
+            "threshold": 5
+        },
+        {
+            "name": "V_baffle",
+            "minimize": true,
+            "threshold": 5
+        }
+    ],
+    "vars": [
+        {
+            "name": "D_pt",
+            "min": -5,
+            "max": 5
+        },
+        {
+            "name": "S_d",
+            "min": -5,
+            "max": 5
+        },
+        {
+            "name": "d1_baffle",
+            "min": -5,
+            "max": 5
+        },
+        {
+            "name": "d2_baffle",
+            "min": -5,
+            "max": 5
+        },
+        {
+            "name": "d3_baffle",
+            "min": -5,
+            "max": 5
+        }
+    ]
+}

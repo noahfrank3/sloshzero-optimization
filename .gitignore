@@ -1,4 +1,7 @@
-venv/
-.env
+data/
+Dockerfile
+fly.toml
+static/fonts/*
+!static/fonts/
 tests/
-src/F_slosh.py
+.dockerignore
