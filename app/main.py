@@ -9,15 +9,16 @@ from fastapi.staticfiles import StaticFiles
 from .modules.logging_utils import new_logger
 from config.config import config
 
-# Configure logging
 logger = new_logger('Main')
-
-# Create FastAPI app
 app = FastAPI()
+
+HEADKEY_PATH = 'data/headkey.txt'
 
 @app.on_event('startup')
 def startup():
-    headkey_path = config['general']['headkey_path']
+    root_dir = Path(config['general']['root_dir'])
+    
+    headkey_path = root_dir / HEADKEY_PATH
 
     with open(headkey_path, 'w') as file:
         headkey = str(uuid.uuid4())

@@ -2,18 +2,18 @@
     "general":
     {
         "github_repo": "https://github.com/noahfrank3/sloshzero-optimization",
-        "experiment_path": "/home/prongles/sloshzero-optimization/data/experiment.json",
-        "users_path": "/home/prongles/sloshzero-optimization/data/users.json",
-        "headkey_path": "/home/prongles/sloshzero-optimization/data/headkey.txt"
+        "root_dir": "/home/prongles/sloshzero-optimization"
     },
     "objectives": [
         {
             "name": "F_slosh",
+            "displayname": "Peak Sloshing Force",
             "minimize": true,
             "threshold": 5
         },
         {
             "name": "V_baffle",
+            "displayname": "Total Baffle Volume",
             "minimize": true,
             "threshold": 5
         }

@@ -1,15 +1,21 @@
+from pathlib import Path
+
 from ax.service.ax_client import AxClient, ObjectiveProperties
 import numpy as np
 import pandas as pd
 
 from app.modules.logging_utils import new_logger
+from app.modules.results import generate_plots
 from config.config import config
 
 logger = new_logger('Ax Client')
 
+EXPERIMENT_PATH = 'data/experiment.json'
+
 class AxClientWrapper():
     def __init__(self):
-        self.experiment_path = config['general']['experiment_path']
+        root_dir = Path(config['general']['root_dir'])
+        self.experiment_path = root_dir / EXPERIMENT_PATH
 
         try:
             self._load_experiment()
@@ -57,7 +63,7 @@ class AxClientWrapper():
 
     def create_trial(self):
         if self._ax_client.get_current_trial_generation_limit()[0] > 0:
-            params, trial_idx = self.ax_client.get_next_trial()
+            params, trial_idx = self._ax_client.get_next_trial()
             self._ax_client.save_to_json_file(self.experiment_path)
             logger.info(f"New trial with parameters {params} and index {trial_idx} created")
             self._save_experiment()
@@ -70,20 +76,23 @@ class AxClientWrapper():
         self._ax_client.save_to_json_file(self.experiment_path)
         logger.info(f"Trial {trial_idx} completed with objectives {objectives}")
         self._save_experiment()
+        generate_plots(self)
 
     def get_pareto_front(self):
-        out = self._ax_client.get_pareto_optimal_parameters()
-        objectives = []
-        for trial_idx, (_, (values, _)) in out.items():
-            row = {'trial_idx': trial_idx}
-            row.update(values)
-            objectives.append(row)
+        x =  list(self._ax_client.get_pareto_optimal_parameters().values())
 
-        objectives = pd.DataFrame(objectives)
-        objectives.set_index("trial_index", inplace=True)
+        objective_1_vals = []
+        objective_2_vals = []
+        for y in x:
+            pareto_vals = y[1][0]
+            objective_1_vals.append(pareto_vals['F_slosh'])
+            objective_2_vals.append(pareto_vals['V_baffle'])
+
+        objective_1_vals = np.array(objective_1_vals)
+        objective_2_vals = np.array(objective_2_vals)
 
         logger.info("Pareto front obtained")
-        return objectives
+        return objective_1_vals, objective_2_vals
 
     def get_trace(self):
         trace = np.array(self._ax_client.get_trace())

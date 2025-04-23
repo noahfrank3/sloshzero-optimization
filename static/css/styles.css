@@ -1,0 +1,172 @@
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('/static/fonts/JetBrainsMono-Regular.woff2') format('woff2'),
+         url('/static/fonts/JetBrainsMono-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body { 
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    background: linear-gradient(to right, #000000, #0a0a0a, #1a1a1a);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    color: dodgerblue;
+}
+
+h1 {
+    margin-bottom: 40px;
+    font-size: 50px
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.link {
+    color: hotpink;
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.block-container {
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-bottom: 40px;
+}
+
+.image-container {
+    gap: 40px;
+}
+
+.item-container {
+    margin-bottom: 10px;
+}
+
+.text-box-header {
+    font-size: 22px;
+}
+
+.text-box {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    padding: 8px;
+    border: 2px solid dodgerblue;
+    border-radius: 16px;
+    color: hotpink;
+    background-color: transparent;
+}
+
+.text-box:hover {
+    color: gold;
+}
+
+.text-box:focus {
+    outline: none;
+    color: gold;
+}
+
+.big-text-box {
+    width: 400px;
+}
+
+.small-text-box {
+    width: 200px;
+}
+
+.button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 8px;
+    border: 2px solid dodgerblue;
+    border-radius: 16px;
+    color: hotpink;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.button:hover {
+    color: gold;
+}
+
+.button:active {
+    border-color: royalblue;
+    background-color: royalblue;
+    color: gold;
+    transform: scale(0.95);
+}
+
+.navbar {
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.navbar a {
+    color: hotpink;
+    text-decoration: none;
+    padding: 8px 15px;
+    font-size: 18px;
+    border-radius: 16px;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    color: dodgerblue;
+    font-size: 18px;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer a {
+    color: hotpink;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+#trial-data {
+    display: none;
+}
+
+#objectives {
+    display: none;
+}
+
+#user-buttons {
+    display: none
+}
+
+#add-trials {
+    display: none
+}
+
+#user-operations {
+    display: none
+}
+
+#admin-buttons {
+    display: none
+}
+
+#logs {
+    display: none
+}

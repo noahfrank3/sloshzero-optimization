@@ -1,14 +1,17 @@
 import json
+from pathlib import Path
 import uuid
 
 from app.modules.logging_utils import new_logger
 from config.config import config
 
 logger = new_logger('Users')
+USERS_PATH = 'data/users.json'
 
 class Users:
     def __init__(self):
-        self._data_path = config['general']['users_path']
+        root_dir = Path(config['general']['root_dir'])
+        self._data_path = root_dir / USERS_PATH
         self._load_users()
 
     def _save_users(self):

@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Body, Depends, Header, HTTPException
 
-from ..modules.globals import Globals
-from ..modules.logging_utils import new_logger
+from app.modules.globals import Globals
+from app.modules.logging_utils import new_logger
 
 logger = new_logger('Private')
 router = APIRouter()
@@ -16,11 +16,21 @@ async def verify_api_key(api_key: str = Header(...)):
     if api_key not in api_keys:
         logger.warning("Invalid API key")
         raise HTTPException(status_code=401, detail="Invalid API key")
+    return api_key
+
+@router.get('/check-api-key')
+def check_api_key(api_key: str = Depends(verify_api_key)):
+    pass
 
 @router.get('/get-trial-data')
-def get_trial_data(api_key: str = Depends(verify_api_key)):
-    pass
+async def get_trial_data(api_key: str = Depends(verify_api_key)):
+    async with globals.lock:
+        return {'params': globals.scheduler.get_trial_data(api_key)}
 
-@router.get('/complete-trial')
-def complete_trial(input, api_key: str = Depends(verify_api_key)):
-    pass
+@router.post('/complete-trial')
+async def complete_trial(
+        input: dict = Body(...),
+        api_key: str = Depends(verify_api_key)
+):
+    async with globals.lock:
+        globals.scheduler.complete_trial(api_key, input)

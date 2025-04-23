@@ -1,13 +1,19 @@
+from pathlib import Path
+
 from fastapi import APIRouter, Depends, Header, HTTPException
 
 from config.config import config
-from ..modules.globals import Globals
-from ..modules.logging_utils import new_logger
+from app.modules.globals import Globals
+from app.modules.logging_utils import new_logger
 
 logger = new_logger('Admin')
 router = APIRouter()
-headkey_path = config['general']['headkey_path']
 globals = Globals()
+
+HEADKEY_PATH = 'data/headkey.txt'
+root_dir = Path(config['general']['root_dir'])
+headkey_path = root_dir / HEADKEY_PATH
+
 
 with open(headkey_path, 'r') as file:
     HEADKEY = file.readline().strip()

@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from fastapi.responses import FileResponse
 
 from config.config import config
-from ..modules.logging_utils import new_logger
+from app.modules.logging_utils import new_logger
 
 logger = new_logger('Public')
 router = APIRouter()

@@ -4,21 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Optimization Results</h1>
-        <div class="image-container">
-            <img src="/static/images/pareto_front.svg" alt="Pareto Front">
-            <img src="/staticimages/trace.svg" alt="Trace">
-        </div>
-        <p class="source-code">
-            <span style="color: dodgerblue;">Source code: </span>
-            <a href="https://github.com/noahfrank3/sloshzero-optimization" class="link">
-                https://github.com/noahfrank3/sloshzero-optimization
-            </a>
-        </p>
+    <div class="navbar">
+        <a href="/static/index.html">Home</a>
+        <a href="/static/user.html">User Dashboard</a>
+        <a href="/static/admin.html">Admin Dashboard</a>
     </div>
+    <h1>Optimization Results</h1>
+    <div class="block-container">
+        <div class="image-container">
+            <img src="/static/images/pareto_front.svg" alt="[Pareto front plot]">
+            <img src="/static/images/trace.svg" alt="[Trace plot]">
+        </div>
+    </div>
+    <footer class="footer">
+        <p>This project is licensed under the 
+            <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer">
+                GNU Affero General Public License 3.0 (AGPL 3.0)</a>.
+            You can view the source code on 
+            <a href="https://github.com/noahfrank3/sloshzero-optimization" target="_blank" rel="noopener noreferrer">
+                GitHub</a>.
+        </p>
+    </footer>
+    <script src="js/scripts.js"></script>
 </body>
 </html>

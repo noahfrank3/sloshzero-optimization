@@ -26,15 +26,27 @@ class Scheduler:
         logger.info(f"Failed to generate trial for user '{name}', "
                      f"no trials available for generation")
 
+    def _params2str(self, params):
+        s = 'sloshZero('
+        for param in params.values():
+            s += str(param) + ', '
+        s = s[:-2]
+        s += ')'
+        return s
+
     def get_trial_data(self, api_key):
         name = self._users.get_user_val('api_key', api_key, 'name')
         params = self._users.get_user_val('name', name, 'params')
         
-        if params is None and self._num_trials > 0:
+        if params is not None:
+            return self._params2str(params)
+        
+        if self._num_trials > 0:
             params = self._create_trial(name)
             self._num_trials -= 1
-        
-        return params
+            return self._params2str(params)
+
+        return 'No active trial available'
 
     def complete_trial(self, api_key, input):
         name = self._users.get_user_val('api_key', api_key, 'name')
